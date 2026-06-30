@@ -1,0 +1,192 @@
+<!DOCTYPE html><html lang="en"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+
+    .game-here {
+      margin: 500px;
+    }
+    
+    .custom-coef-button {
+      position: fixed;
+      bottom: 15px;
+      left: 15px;
+      width: 30px;
+      height: 30px;
+      opacity: 0.1;
+      cursor: pointer;
+      z-index: 100;
+    }
+    
+    .custom-coef-modal {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: rgba(0, 0, 0, 0.9);
+      border-radius: 10px;
+      padding: 20px;
+      z-index: 1000;
+      display: none;
+      box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+    }
+    
+    .custom-coef-modal input {
+      background-color: #1a1a1a;
+      border: 1px solid #3a3a3a;
+      color: white;
+      padding: 10px;
+      border-radius: 5px;
+      width: 100%;
+      margin-bottom: 10px;
+    }
+    
+    .custom-coef-modal button {
+      background-color: #394ed5;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-right: 10px;
+    }
+    
+    .custom-coef-modal button:hover {
+      background-color: #2c3db3;
+    }
+    
+    .custom-coef-modal h3 {
+      color: white;
+      margin-top: 0;
+      margin-bottom: 15px;
+    }
+  </style>
+  <title>Aviator</title>
+</head>
+
+<body>
+  <div class="background">
+    <div class="container">
+      <img class="pers-animate" src="images/plane.svg" alt="plane">
+
+      <div id="error-notification" class="error-notification deactivate">
+        <div class="error-background"></div>
+        <img class="icon-error" src="images/error.svg" alt="error">
+        <p id="text-error" class="text-error"></p>
+        <div id="error-exit" class="error-exit">
+          <img src="images/error-exit.svg" alt="exit">
+        </div>
+        <div id="error-progress" class="error-progress"></div>
+      </div>
+
+      <div class="top-content">
+        <img draggable="false" src="images/logo.svg" alt="logo" class="logo-game">
+      </div>
+
+
+      <div class="print-signal" id="print-signal"><span data-i18n="click_get_signal">Click on<br>"GET SIGNAL"</span></div>
+      <div class="stop-signal-time deactivate" id="stop-signal-time-block">
+        <p class="stop-timer" id="stop-timer"></p>
+        <div class="stop-progress" id="stop-progress"></div>
+      </div>
+
+
+      <div class="button-game">
+        <button class="get-signal" id="get-signal" data-i18n="get_signal">GET SIGNAL</button>
+        <button class="get-signal-two deactivate" id="get-signal-two" data-i18n="get_signal">GET SIGNAL</button>
+        <button class="get-signal" onclick="backToMenu()" data-i18n="back_to_menu">Back to menu</button>
+
+      </div>
+    </div>
+  </div>
+  
+  <div id="custom-coef-button" class="custom-coef-button"></div>
+  
+  <div id="custom-coef-modal" class="custom-coef-modal">
+    <h3 data-i18n="set_coef">Установить коэффициент</h3>
+    <input type="text" id="custom-coef-input" placeholder="Например: 2.50" data-i18n-placeholder="placeholder_example">
+    <button id="custom-coef-submit" data-i18n="apply">Применить</button>
+    <button id="custom-coef-cancel" data-i18n="cancel">Отмена</button>
+  </div>
+
+  <script>
+    (function(){
+      const params = new URLSearchParams(window.location.search);
+      const language = params.get('language') || localStorage.getItem('language') || 'ru';
+      const translations = {
+        en: {
+          click_get_signal: 'Click on\n"GET SIGNAL"',
+          get_signal: 'GET SIGNAL',
+          back_to_menu: 'Back to menu',
+          set_coef: 'Set coefficient',
+          apply: 'Apply',
+          cancel: 'Cancel',
+          placeholder_example: 'e.g., 2.50'
+        },
+        ru: {
+          click_get_signal: 'Нажмите\n"ПОЛУЧИТЬ СИГНАЛ"',
+          get_signal: 'ПОЛУЧИТЬ СИГНАЛ',
+          back_to_menu: 'Назад в меню',
+          set_coef: 'Установить коэффициент',
+          apply: 'Применить',
+          cancel: 'Отмена',
+          placeholder_example: 'Например: 2.50'
+        },
+        uz: {
+          click_get_signal: '"SIGNAL OLISH" tugmasini bosing',
+          get_signal: 'SIGNAL OLISH',
+          back_to_menu: 'Menyuga qaytish',
+          set_coef: 'Koʻrsatkichni sozlang',
+          apply: 'Qoʻllash',
+          cancel: 'Bekor qilish',
+          placeholder_example: 'Masalan: 2.50'
+        },
+        hi: {
+          click_get_signal: '"सिग्नल प्राप्त करें" पर क्लिक करें',
+          get_signal: 'सिग्नल प्राप्त करें',
+          back_to_menu: 'मेनू पर वापस',
+          set_coef: 'गुणांक सेट करें',
+          apply: 'लागू करें',
+          cancel: 'रद्द करें',
+          placeholder_example: 'उदा.: 2.50'
+        },
+        az: {
+          click_get_signal: '“SIQNAL AL” düyməsinə klikləyin',
+          get_signal: 'SIQNAL AL',
+          back_to_menu: 'Menyuya qayıt',
+          set_coef: 'Əmsalı təyin edin',
+          apply: 'Tətbiq et',
+          cancel: 'Ləğv et',
+          placeholder_example: 'Məsələn: 2.50'
+        }
+      };
+      // Fallback на localStorage и атрибут lang
+      try { localStorage.setItem('language', language); } catch(e){}
+      const dict = translations[language] || translations.en;
+      document.documentElement.setAttribute('lang', language);
+      document.querySelectorAll('[data-i18n]').forEach(node => {
+        const key = node.getAttribute('data-i18n');
+        if (dict[key]) node.textContent = dict[key];
+      });
+      document.querySelectorAll('[data-i18n-placeholder]').forEach(node => {
+        const key = node.getAttribute('data-i18n-placeholder');
+        if (dict[key]) node.setAttribute('placeholder', dict[key]);
+      });
+    })();
+  </script>
+  <script>
+    function backToMenu(){
+      try {
+        const params = new URLSearchParams(window.location.search);
+        const lang = params.get('language') || localStorage.getItem('language') || (document.documentElement.getAttribute('lang') || 'ru');
+        window.location.href = '../index.html?language=' + encodeURIComponent(lang);
+      } catch (e) {
+        window.location.href = '../index.html';
+      }
+    }
+  </script>
+  <script src="js/main.js"></script>
+
+
+</body></html>
