@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="game-container">
+        <div class="game-box">
+
+            <div id="result"></div>
+            <div id="coin-container">
+                <div class="toggle-wrapper toggle-floating">
+                    <span class="toggle-text" data-i18n="series_label">Серия</span>
+                    <label class="toggle">
+                        <input id="seriesToggle" type="checkbox" onchange="toggleSeries(this.checked)">
+                        <span class="toggle-track"></span>
+                        <span class="toggle-thumb"></span>
+                    </label>
+                </div>
+            </div>
+            <div id="multipliersBar" class="multipliers">
+                <div class="multiplier-item" data-mult="1.88">x1.88</div>
+                <div class="multiplier-item" data-mult="3.76">x3.76</div>
+                <div class="multiplier-item" data-mult="7.52">x7.52</div>
+                <div class="multiplier-item" data-mult="15.04">x15.04</div>
+                <div class="multiplier-item" data-mult="30.08">x30.08</div>
+                <div class="multiplier-item" data-mult="60.16">x60.16</div>
+                <div class="multiplier-item" data-mult="120.32">x120.32</div>
+            </div>
+            <button data-i18n="flip" onclick="flipCoin()">Flip the Coin</button>
+            <div id="seriesInfo" class="info-pill" style="display: none;">
+                <span id="seriesLabel" data-i18n="series_label">Серия</span>: <span id="seriesCount">0</span>/7
+            </div>
+            <div id="cooldownInfo" class="info-pill" style="display: none;"></div>
+            <button g="goBack" onclick="backToMenu()" data-i18n="exit">Back to menu</button>
+        </div>
+    </div>
+
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://cdnjs.cloudflare.com/ajax/libs/three.js/0.161.0/three.module.min.js",
+                "OBJLoader": "https://cdn.jsdelivr.net/npm/three@0.161.0/examples/jsm/loaders/OBJLoader.js"
+            }
+        }
+    </script>
+
+    <!-- Liquid Glass JS (external) -->
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/dashersw/liquid-glass-js/container.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/dashersw/liquid-glass-js/button.js"></script>
+
+    <script type="module" src="app.js"></script>
+    <script>
+      function backToMenu(){
+        try {
+          const params = new URLSearchParams(window.location.search);
+          const lang = params.get('language') || localStorage.getItem('language') || (document.documentElement.getAttribute('lang') || 'ru');
+          window.location.href = '../index.html?language=' + encodeURIComponent(lang);
+        } catch (e) {
+          window.location.href = '../index.html';
+        }
+      }
+    </script>
+</body>
+</html>

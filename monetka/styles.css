@@ -1,0 +1,248 @@
+/* iOS‑style redesign with liquid glass */
+@font-face {
+  font-family: 'Intro';
+  src: url('intro.otf') format('opentype');
+  font-display: swap;
+}
+
+/* Design tokens */
+:root {
+  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Inter, Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --bg-root: #0b1020;
+  --accent: #0A84FF; /* iOS blue */
+  --accent-end: #0062DE;
+  --accent-focus: rgba(10, 132, 255, 0.35);
+  --glass-bg: rgba(255, 255, 255, 0.10);
+  --glass-border: rgba(255, 255, 255, 0.35);
+  --glass-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
+  --text-primary: #ffffff;
+  --text-secondary: #cfd5e3;
+  --success: #34C759;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+.game-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  font-family: var(--font-sans);
+  background: radial-gradient(1200px 600px at 20% -10%, #0c1330 0%, #0b1020 60%),
+              radial-gradient(800px 400px at 100% 0%, #071126 0%, #0b1020 60%);
+  position: relative;
+  overflow: hidden;
+  padding: 24px;
+}
+
+/* Liquid glass blobs */
+.game-container::before,
+.game-container::after {
+  content: '';
+  position: absolute;
+  inset: -15%;
+  filter: blur(48px);
+  pointer-events: none;
+}
+
+.game-container::before {
+  background:
+    radial-gradient(520px 280px at 15% 25%, rgba(10, 132, 255, 0.18), transparent 60%),
+    radial-gradient(420px 260px at 85% 20%, rgba(255, 149, 0, 0.14), transparent 60%),
+    radial-gradient(420px 260px at 30% 85%, rgba(88, 220, 255, 0.16), transparent 60%);
+  animation: blobShift 16s ease-in-out infinite alternate;
+}
+
+.game-container::after {
+  background:
+    radial-gradient(520px 280px at 75% 80%, rgba(255, 55, 95, 0.12), transparent 60%),
+    radial-gradient(420px 260px at 8% 90%, rgba(125, 255, 144, 0.10), transparent 60%);
+  mix-blend-mode: screen;
+  animation: blobShift2 22s ease-in-out infinite alternate;
+}
+
+@keyframes blobShift { from { transform: translate3d(-10px, 0, 0); } to { transform: translate3d(10px, -6px, 0); } }
+@keyframes blobShift2 { from { transform: translate3d(8px, -6px, 0); } to { transform: translate3d(-8px, 6px, 0); } }
+
+.game-box {
+  width: 100%;
+  max-width: 520px;
+  color: var(--text-primary);
+  text-align: center;
+  padding: 24px;
+  border-radius: 24px;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(18px) saturate(140%);
+  box-shadow: var(--glass-shadow);
+  position: relative;
+}
+
+#coin-container {
+  width: 100%;
+  aspect-ratio: 1;
+  max-width: 320px;
+  max-height: 320px;
+  position: relative;
+  margin: 1.75rem auto 1rem;
+}
+
+#coin-container canvas {
+  width: 100% !important; height: 100% !important;
+  position: absolute; inset: 0; z-index: 1;
+}
+
+/* Liquid Glass glow layer behind coin */
+.glow-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: 50%;
+  pointer-events: none;
+  transition: background 320ms ease, filter 320ms ease, opacity 320ms ease;
+  opacity: 0.9;
+  filter: blur(22px);
+}
+
+button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: linear-gradient(180deg, var(--accent), var(--accent-end));
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #fff;
+  padding: 14px 18px;
+  border-radius: 14px;
+  font-size: clamp(1rem, 3vw, 1.1rem);
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+  margin-top: 1rem;
+  width: 100%;
+  max-width: 320px;
+  box-shadow: 0 8px 24px rgba(10, 132, 255, 0.35);
+}
+
+button:hover { box-shadow: 0 10px 28px rgba(10, 132, 255, 0.45); }
+button:active { transform: scale(0.98); box-shadow: 0 6px 18px rgba(10, 132, 255, 0.35); }
+button.reset-animation { transform: scale(1); transition: transform 0.15s ease-in; }
+
+#result {
+  margin-top: clamp(2.2rem, 6vw, 3rem); /* extra top space to avoid overlap with top pills */
+  font-size: clamp(1.2rem, 4vw, 1.5rem);
+  min-height: 2rem;
+  color: var(--success);
+  text-shadow: 0 0 12px rgba(52, 199, 89, 0.35);
+  font-family: 'Intro', var(--font-sans);
+}
+
+h1 { font-size: clamp(1.5rem, 5vw, 2rem); margin-bottom: 1rem; color: var(--text-primary); }
+
+@media (max-width: 480px) { .game-box { padding: 18px; } }
+
+.toggle-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 1.25rem;
+  justify-content: center;
+}
+
+.toggle-text { color: var(--text-secondary); font-size: 1rem; }
+
+.toggle { position: relative; width: 56px; height: 30px; cursor: pointer; }
+.toggle input { position: absolute; opacity: 0; pointer-events: none; }
+.toggle-track {
+  position: absolute; inset: 0;
+  background: rgba(255, 255, 255, 0.20);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 999px; transition: background 0.2s ease, border-color 0.2s ease;
+}
+.toggle-thumb {
+  position: absolute; top: 4px; left: 4px; width: 22px; height: 22px;
+  background: #fff; border-radius: 50%; box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+  transition: left 0.2s ease;
+}
+.toggle input:checked ~ .toggle-track { background: var(--accent); border-color: rgba(255,255,255,0.35); }
+.toggle input:checked ~ .toggle-thumb { left: 30px; }
+
+/* Top info pills: Series and Next Throw */
+.info-pill {
+  position: absolute;
+  top: 12px;
+  padding: 8px 12px;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  line-height: 1;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  color: var(--text-secondary);
+  backdrop-filter: blur(12px) saturate(140%);
+  box-shadow: 0 4px 18px rgba(0,0,0,0.25);
+}
+
+#seriesInfo { left: 12px; color: var(--text-primary); }
+#cooldownInfo { right: 12px; color: var(--accent); }
+
+/* Motion settings */
+@media (prefers-reduced-motion: reduce) {
+  .game-container::before, .game-container::after { animation: none; }
+  button { transition: none; }
+}
+
+/* Floating placement for Series toggle inside coin area */
+.toggle-floating {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  padding: 8px 12px;
+  border-radius: 12px;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(12px) saturate(140%);
+  box-shadow: 0 4px 18px rgba(0,0,0,0.25);
+  justify-content: initial;
+  margin: 0;
+  z-index: 2;
+}
+
+/* Multipliers bar */
+.multipliers {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: 8px 0 4px;
+}
+
+.multipliers.show { display: flex; }
+
+.multiplier-item {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: var(--text-secondary);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  line-height: 1;
+  transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+.multiplier-item.active {
+  color: #fff;
+  background: radial-gradient(60% 60% at 50% 50%, rgba(10, 132, 255, 0.25) 0%, rgba(10, 132, 255, 0.18) 50%, rgba(10, 132, 255, 0.06) 80%, transparent 100%);
+  border-color: rgba(255, 255, 255, 0.45);
+  box-shadow: 0 0 12px rgba(10, 132, 255, 0.45), inset 0 0 8px rgba(10, 132, 255, 0.35);
+}
+
+.multipliers.neutral .multiplier-item {
+  background: rgba(128, 128, 128, 0.15);
+  color: #9aa1ad;
+  border-color: rgba(128, 128, 128, 0.30);
+  box-shadow: none;
+}
+

@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Игровой портал</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="themes.css">
+    <link rel="stylesheet" href="mobile.css">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    
+</head>
+<body>
+  <!-- Улучшенный профиль пользователя -->
+  <div class="user-profile" id="userProfile">
+    <div class="profile-info">
+      <div class="main-profile-section">
+        <div class="avatar-container">
+          <img id="userAvatar" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='70' height='70' viewBox='0 0 70 70'%3E%3Ccircle cx='35' cy='35' r='30' fill='%234A90E2'/%3E%3Ctext x='35' y='42' font-family='Arial' font-size='28' fill='white' text-anchor='middle'%3E👤%3C/text%3E%3C/svg%3E" alt="Avatar" class="user-avatar">
+          <div class="avatar-status"></div>
+        </div>
+        <div class="user-details">
+          <div class="user-name-section">
+            <h3 id="userName" class="user-name">Пользователь</h3>
+            <button class="settings-btn" id="settingsBtn" title="Настройки">
+              <span class="settings-icon">⚙️</span>
+            </button>
+          </div>
+          <p id="userId" class="user-id">ID: не загружен</p>
+          <div class="user-status">
+            <span class="status-indicator online"></span>
+            <span class="status-text">Online</span>
+          </div>
+        </div>
+      </div>
+      <div class="profile-controls">
+        <div class="device-detector">
+          <div class="device-info-mini" id="deviceInfo">
+            <span class="device-icon">📱</span>
+            <span class="device-text" id="deviceText">Mobile</span>
+          </div>
+        </div>
+        
+        <!-- Плашка выбора языка -->
+        <div class="language-btn" id="languageBtn" title="Выбор языка">
+          <span class="language-flag" id="languageFlag">🇷🇺</span>
+          <span class="language-text" id="languageText">Русский</span>
+        </div>
+
+
+        <!-- Селектор тем будет добавлен автоматически через JavaScript -->
+      </div>
+      
+      <!-- Выдвижное меню настроек -->
+      <div class="settings-panel" id="settingsPanel">
+        <div class="settings-header">
+          <h4>Настройки темы</h4>
+        </div>
+        <div class="settings-content">
+          <!-- Темы будут добавлены через JavaScript -->
+        </div>
+      </div>
+
+      <!-- Выдвижное меню выбора языка -->
+      <div class="settings-panel" id="languagePanel">
+        <div class="settings-header">
+          <h4>Выбор языка</h4>
+        </div>
+        <div class="settings-content">
+          <div class="settings-lang-grid" id="settingsLangGrid">
+            <div class="settings-lang-btn" data-lang="ru" title="Русский"><span class="lang-flag">🇷🇺</span><span class="lang-name">Русский</span></div>
+            <div class="settings-lang-btn" data-lang="en" title="English"><span class="lang-flag">🇬🇧</span><span class="lang-name">English</span></div>
+            <div class="settings-lang-btn" data-lang="uz" title="Oʻzbek"><span class="lang-flag">🇺🇿</span><span class="lang-name">Oʻzbek</span></div>
+            <div class="settings-lang-btn" data-lang="hi" title="हिन्दी"><span class="lang-flag">🇮🇳</span><span class="lang-name">हिन्दी</span></div>
+            <div class="settings-lang-btn" data-lang="az" title="Azərbaycan"><span class="lang-flag">🇦🇿</span><span class="lang-name">Azərbaycan</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+
+
+
+
+<div id="Games" class="tabcontent active">
+    <div class="row">
+        <!-- 1. Mines (HOT) -->
+        <div class="game">
+            <div class="game-badge">Hot</div>
+            <img src="1.png" alt="Mines Preview">
+            <div class="game-info">
+                <h3 id="game1-title">Mines</h3>
+                <button id="game1-button" onclick="openGame('mines')">Open</button>
+            </div>
+        </div>
+        <!-- 2. Penalty Shootout (HOT) -->
+        <div class="game">
+            <div class="game-badge">Hot</div>
+            <img src="penafon.png" alt="Penalty Shoot Preview">
+            <div class="game-info">
+                <h3 id="game2-title">Penalty Shootout</h3>
+                <button id="game2-button" onclick="openGame('penalty')">Open</button>
+            </div>
+        </div>
+        <!-- 3. King Thimbles (HOT + NEW) -->
+        <div class="game">
+            <div class="game-badge-hot">Hot</div>
+            <div class="game-badge-new">New</div>
+            <img src="king.webp" alt="King Thimbles Preview">
+            <div class="game-info">
+                <h3 id="game3-title">King Thimbles</h3>
+                <button id="game3-button" onclick="openGame('timb')">Open</button>
+            </div>
+        </div>
+        <!-- 4. Mi Mines (HOT) -->
+        <div class="game">
+            <div class="game-badge">Hot</div>
+            <img src="mimines.jpg" alt="Mi Mines Preview">
+            <div class="game-info">
+                <h3 id="game4-title">Mi Mines</h3>
+                <button id="game4-button" onclick="openGame('spribe')">Open</button>
+            </div>
+        </div>
+        <!-- 5. Football X -->
+        <div class="game">
+            <img src="footxiconca.png" alt="Football X Preview">
+            <div class="game-info">
+                <h3 id="game5-title">Football X</h3>
+                <button id="game5-button" onclick="openGame('footballX')">Open</button>
+            </div>
+        </div>
+        <!-- 6. Mines New -->
+        <div class="game">
+            <img src="minesnew.jpg" alt="Mines New Preview">
+            <div class="game-info">
+                <h3 id="game6-title">Mines (New)</h3>
+                <button id="game6-button" onclick="openGame('minesnew')">Open</button>
+            </div>
+        </div>
+        <!-- 7. Mine Island (Kangaroo) -->
+        <div class="game">
+            <img src="mineisland.avif" alt="Mine Island Preview">
+            <div class="game-info">
+                <h3 id="game7-title">Mine Island</h3>
+                <button id="game7-button" onclick="openGame('mineisland')">Open</button>
+            </div>
+        </div>
+        <!-- 8. Chicky Run -->
+        <div class="game">
+            <img src="chick.jpg" alt="Chicky Run Preview">
+            <div class="game-info">
+                <h3 id="game8-title">Chicky Run</h3>
+                <button id="game8-button" onclick="openGame('chick')">Open</button>
+            </div>
+        </div>
+        <!-- 9. AviaMaster (NEW) -->
+        <div class="game">
+            <div class="game-badge new">New</div>
+            <img src="avia.png" alt="AviaMaster Preview">
+            <div class="game-info">
+                <h3 id="game9-title">AviaMaster</h3>
+                <button id="game9-button" onclick="openGame('avia')">Open</button>
+            </div>
+        </div>
+        <!-- 10. CoinFlip -->
+        <div class="game">
+            <img src="11.png" alt="CoinFlip Preview">
+            <div class="game-info">
+                <h3 id="game10-title">CoinFlip</h3>
+                <button id="game10-button" onclick="openGame('coin')">Open</button>
+            </div>
+        </div>
+        <!-- 11. Aviator -->
+        <div class="game">
+            <img src="6.png" alt="Aviator Preview">
+            <div class="game-info">
+                <h3 id="game11-title">Aviator</h3>
+                <button id="game11-button" onclick="openGame('aviator')">Open</button>
+            </div>
+        </div>
+        <!-- 12. Balloon -->
+        <div class="game">
+            <img src="ball.jpg" alt="Balloon Preview">
+            <div class="game-info">
+                <h3 id="game12-title">Balloon</h3>
+                <button id="game12-button" onclick="openGame('ball')">Open</button>
+            </div>
+        </div>
+    </div>
+    <!-- Пасхалка под играми -->
+       </div>
+</div>
+
+
+
+<audio id="aboutAudio" src="gif.mp3"></audio>
+
+<script>
+// Функция для создания метеоров
+function createMeteor() {
+    const meteorShower = document.getElementById('meteorShower');
+    if (!meteorShower) return;
+    const meteor = document.createElement('div');
+    meteor.className = 'meteor';
+    
+    // Случайное начальное положение
+    const startX = Math.random() * window.innerWidth;
+    const startY = -100;
+    
+    // Случайный размер
+    const size = Math.random() * 2 + 1;
+    const length = Math.random() * 100 + 30;
+    
+    meteor.style.left = startX + 'px';
+    meteor.style.top = startY + 'px';
+    meteor.style.width = size + 'px';
+    meteor.style.height = length + 'px';
+    meteor.style.animationDuration = Math.random() * 3 + 2 + 's';
+    
+    meteorShower.appendChild(meteor);
+    
+    // Удаляем метеор после окончания анимации
+    setTimeout(() => {
+        meteor.remove();
+    }, 6000);
+}
+
+// Запускаем периодическое создание метеоров
+setInterval(createMeteor, 8000);
+
+// Создаем несколько метеоров в начале
+for (let i = 0; i < 2; i++) {
+    setTimeout(createMeteor, Math.random() * 3000);
+}
+</script>
+
+<script src="themes.js"></script>
+<script src="quick-actions.js"></script>
+<script src="scroll-fix.js"></script>
+<script src="script.js?v=2"></script>
+</body>
+</html>

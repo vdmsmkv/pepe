@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<!-- saved from url=(0047)https://ca94069.tw1.ru/NEW/GAMES/thi/index.html -->
+<html lang="ru"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+    <title>Черепа</title>
+    <style>
+        @font-face {
+            font-family: 'Intro';
+            src: url('fonts/intro.otf') format('opentype');
+        }
+        @font-face {
+            font-family: 'Halvar';
+            src: url('fonts/halvar_breitschrift.ttf') format('truetype');
+        }
+        body {
+            background: url('1.jpg') no-repeat center center fixed;
+            background-size: cover;
+            margin: 0;
+            height: 100%;
+            overflow: auto;
+            font-family: 'Intro', sans-serif;
+        }
+        
+        /* Time Selection Styles */
+        .time-selection-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+        
+        .time-selection-container {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(15px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            max-width: 400px;
+            width: 90%;
+        }
+        
+        .time-selection-title {
+            color: #fff;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        
+        .time-input-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        
+        .time-input {
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            padding: 12px 15px;
+            font-size: 18px;
+            color: #fff;
+            text-align: center;
+            width: 60px;
+            font-family: 'Intro', sans-serif;
+            font-weight: bold;
+        }
+        
+        .time-input:focus {
+            outline: none;
+            border-color: #ffd700;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+        
+        .time-separator {
+            color: #fff;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .time-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 25px;
+        }
+        
+        .time-ok-button, .time-cancel-button {
+            font-size: 16px;
+            font-weight: bold;
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            outline: none;
+            font-family: 'Intro', sans-serif;
+            border: none;
+        }
+        
+        .time-ok-button {
+            background: linear-gradient(145deg, #28a745 0%, #20c997 100%);
+            box-shadow: 0 6px #1e7e34, 0 -6px #28a745 inset;
+            color: white;
+        }
+        
+        .time-ok-button:hover {
+            background: linear-gradient(145deg, #20c997 0%, #28a745 100%);
+            box-shadow: 0 8px #1e7e34, 0 -6px #28a745 inset;
+            transform: translateY(-3px);
+        }
+        
+        .time-ok-button:active {
+            box-shadow: 0 3px #1e7e34, 0 -3px #28a745 inset;
+            transform: translateY(2px);
+        }
+        
+        .time-cancel-button {
+            background: linear-gradient(145deg, #6c757d 0%, #495057 100%);
+            box-shadow: 0 6px #343a40, 0 -6px #6c757d inset;
+            color: white;
+        }
+        
+        .time-cancel-button:hover {
+            background: linear-gradient(145deg, #495057 0%, #6c757d 100%);
+            box-shadow: 0 8px #343a40, 0 -6px #6c757d inset;
+            transform: translateY(-3px);
+        }
+        
+        .time-cancel-button:active {
+            box-shadow: 0 3px #343a40, 0 -3px #6c757d inset;
+            transform: translateY(2px);
+        }
+        
+        .hidden {
+            display: none !important;
+        }
+        
+        .button-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            margin-top: 100px; /* опустили кнопки ниже */
+            width: 100%;
+        }
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            margin-top: 300px; /* опустили королей ниже */
+            position: relative;
+        }
+        .container img.skull {
+            width: 110px;
+            margin: -3px;
+            transition: transform 0.5s cubic-bezier(0.32, 0.64, 0.45, 1);
+            position: relative;
+            z-index: 2;
+        }
+        #diamond {
+            position: absolute;
+            width: 120px; /* Было 40px, стало в 3 раза больше */
+            z-index: 1;
+            display: none;
+            pointer-events: none;
+        }
+#message {
+    position: fixed;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 100;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 44px;
+    margin-top: 0;
+    width: auto;
+    max-width: calc(100vw - 24px);
+    pointer-events: none;
+}
+
+.glass-message {
+    display: inline-block;
+    padding: 10px 16px;
+    border-radius: 18px;
+    background: rgba(255,255,255,0.12);
+    box-shadow:
+        0 4px 16px 0 rgba(0,0,0,0.12),
+        0 0 0 1.5px rgba(255,255,255,0.23) inset,
+        0 0 0 4px rgba(16,185,129,0.10) inset;
+    border: 2px solid rgba(255,255,255,0.35);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    color: #fff;
+    font-family: 'Halvar', sans-serif;
+    font-size: 1.15rem;
+    font-weight: bold;
+    letter-spacing: 0.8px;
+    text-align: center;
+    text-shadow: 0 2px 10px #0008, 0 1px 0 #fff4;
+    transition: box-shadow 0.2s, background 0.2s;
+    user-select: none;
+    margin: 0 auto;
+}
+/* Cooldown banner (next signal) */
+.cooldown-banner {
+    position: fixed;
+    top: 58px; /* будет переопределено скриптом в зависимости от высоты сообщения */
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 101;
+    display: inline-block;
+    padding: 8px 14px;
+    border-radius: 14px;
+    background: rgba(255,255,255,0.10);
+    box-shadow:
+        0 3px 12px 0 rgba(0,0,0,0.12),
+        0 0 0 1px rgba(255,255,255,0.22) inset,
+        0 0 0 3px rgba(16,185,129,0.08) inset;
+    border: 1.5px solid rgba(255,255,255,0.30);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    color: #fff;
+    font-family: 'Halvar', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    letter-spacing: 0.4px;
+    text-align: center;
+    text-shadow: 0 1px 8px #0006;
+    max-width: calc(100vw - 24px);
+}
+
+        .start-button {
+            font-size: 16px;
+            font-weight: bold;
+            padding: 12px 24px;
+            width: 130px;
+            border-radius: 25px;
+            background: linear-gradient(145deg, #e52d27 0%, #b31217 100%);
+            box-shadow: 0 6px #9f0f0f, 0 -6px #e52d27 inset;
+            color: white;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            outline: none;
+            font-family: 'Intro', sans-serif;
+        }
+        .start-button:hover {
+            background: linear-gradient(145deg, #b31217 0%, #e52d27 100%);
+            box-shadow: 0 8px #9f0f0f, 0 -6px #e52d27 inset;
+            transform: translateY(-3px);
+        }
+        .start-button:active {
+            box-shadow: 0 3px #9f0f0f, 0 -3px #e52d27 inset;
+            transform: translateY(2px);
+        }
+        .return-button {
+            font-size: 16px;
+            font-weight: bold;
+            padding: 12px 12px;
+            width: 130px;
+            border-radius: 25px;
+            background: linear-gradient(145deg, #e52d27 0%, #b31217 100%);
+            box-shadow: 0 6px #9f0f0f, 0 -6px #e52d27 inset;
+            color: white;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            outline: none;
+            font-family: 'Intro', sans-serif;
+            margin-top: 20px;
+            text-align: center;
+        }
+        .return-button:hover {
+            background: linear-gradient(145deg, #b31217 0%, #e52d27 100%);
+            box-shadow: 0 8px #9f0f0f, 0 -6px #e52d27 inset;
+            transform: translateY(-3px);
+        }
+        .return-button:active {
+            box-shadow: 0 3px #9f0f0f, 0 -3px #e52d27 inset;
+            transform: translateY(2px);
+        }
+        .start-button[disabled] {
+            opacity: 0.6;
+            cursor: not-allowed;
+            filter: grayscale(20%);
+        }
+        .selected-skull {
+            filter: drop-shadow(0 0 40px #ffd700) brightness(1.15);
+        }
+    </style>
+<style type="text/css">.vue-slider-dot{position:absolute;-webkit-transition:all 0s;transition:all 0s;z-index:5}.vue-slider-dot:focus{outline:none}.vue-slider-dot-tooltip{position:absolute;visibility:hidden}.vue-slider-dot-hover:hover .vue-slider-dot-tooltip,.vue-slider-dot-tooltip-show{visibility:visible}.vue-slider-dot-tooltip-top{top:-10px;left:50%;-webkit-transform:translate(-50%,-100%);transform:translate(-50%,-100%)}.vue-slider-dot-tooltip-bottom{bottom:-10px;left:50%;-webkit-transform:translate(-50%,100%);transform:translate(-50%,100%)}.vue-slider-dot-tooltip-left{left:-10px;top:50%;-webkit-transform:translate(-100%,-50%);transform:translate(-100%,-50%)}.vue-slider-dot-tooltip-right{right:-10px;top:50%;-webkit-transform:translate(100%,-50%);transform:translate(100%,-50%)}</style><style type="text/css">.vue-slider-marks{position:relative;width:100%;height:100%}.vue-slider-mark{position:absolute;z-index:1}.vue-slider-ltr .vue-slider-mark,.vue-slider-rtl .vue-slider-mark{width:0;height:100%;top:50%}.vue-slider-ltr .vue-slider-mark-step,.vue-slider-rtl .vue-slider-mark-step{top:0}.vue-slider-ltr .vue-slider-mark-label,.vue-slider-rtl .vue-slider-mark-label{top:100%;margin-top:10px}.vue-slider-ltr .vue-slider-mark{-webkit-transform:translate(-50%,-50%);transform:translate(-50%,-50%)}.vue-slider-ltr .vue-slider-mark-step{left:0}.vue-slider-ltr .vue-slider-mark-label{left:50%;-webkit-transform:translateX(-50%);transform:translateX(-50%)}.vue-slider-rtl .vue-slider-mark{-webkit-transform:translate(50%,-50%);transform:translate(50%,-50%)}.vue-slider-rtl .vue-slider-mark-step{right:0}.vue-slider-rtl .vue-slider-mark-label{right:50%;-webkit-transform:translateX(50%);transform:translateX(50%)}.vue-slider-btt .vue-slider-mark,.vue-slider-ttb .vue-slider-mark{width:100%;height:0;left:50%}.vue-slider-btt .vue-slider-mark-step,.vue-slider-ttb .vue-slider-mark-step{left:0}.vue-slider-btt .vue-slider-mark-label,.vue-slider-ttb .vue-slider-mark-label{left:100%;margin-left:10px}.vue-slider-btt .vue-slider-mark{-webkit-transform:translate(-50%,50%);transform:translate(-50%,50%)}.vue-slider-btt .vue-slider-mark-step{top:0}.vue-slider-btt .vue-slider-mark-label{top:50%;-webkit-transform:translateY(-50%);transform:translateY(-50%)}.vue-slider-ttb .vue-slider-mark{-webkit-transform:translate(-50%,-50%);transform:translate(-50%,-50%)}.vue-slider-ttb .vue-slider-mark-step{bottom:0}.vue-slider-ttb .vue-slider-mark-label{bottom:50%;-webkit-transform:translateY(50%);transform:translateY(50%)}.vue-slider-mark-label,.vue-slider-mark-step{position:absolute}</style><style type="text/css">.vue-slider{position:relative;-webkit-box-sizing:content-box;box-sizing:content-box;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;display:block;-webkit-tap-highlight-color:rgba(0,0,0,0)}.vue-slider-rail{position:relative;width:100%;height:100%;-webkit-transition-property:width,height,left,right,top,bottom;transition-property:width,height,left,right,top,bottom}.vue-slider-process{position:absolute;z-index:1}</style></head>
+<body>
+    <!-- Time Selection Overlay -->
+    <div id="timeSelectionOverlay" class="time-selection-overlay">
+        <div class="time-selection-container">
+            <div class="time-selection-title" data-i18n="time_title">Введите текущее время</div>
+            <div class="time-input-container">
+                <input type="number" id="hoursInput" class="time-input" min="0" max="23" value="16" placeholder="ЧЧ" data-i18n-placeholder="hh">
+                <span class="time-separator">:</span>
+                <input type="number" id="minutesInput" class="time-input" min="0" max="59" value="17" placeholder="ММ" data-i18n-placeholder="mm">
+            </div>
+            <div class="time-buttons">
+                <button class="time-ok-button" onclick="confirmTime()" data-i18n="ok">OK</button>
+                <button class="time-cancel-button" onclick="cancelTimeSelection()" data-i18n="cancel">Отмена</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <img src="1.png" alt="Череп 1" id="skull1" class="skull">
+        <img src="1.png" alt="Череп 2" id="skull2" class="skull">
+        <img src="1.png" alt="Череп 3" id="skull3" class="skull">
+        <img src="3.png" alt="Алмаз" id="diamond">
+    </div>
+<div class="button-container">
+    <button class="start-button" onclick="showTimeSelection()" data-i18n="start">Start</button>
+    <button class="return-button" onclick="history.back()" data-i18n="back">Back</button>
+</div>
+
+    <div id="message"></div>
+    <div id="cooldown" class="cooldown-banner hidden">
+        <span data-i18n="next_signal">Следующий сигнал через</span>
+        <span id="countdownSeconds">10</span>
+        <span data-i18n="sec">сек</span>
+    </div>
+    <script>
+        let selectedTime = null;
+        let cooldownActive = false;
+        let cooldownInterval = null;
+        let cooldownRemaining = 0;
+        function positionCooldownBelowMessage() {
+            const cd = document.getElementById('cooldown');
+            const msg = document.getElementById('message');
+            if (!cd || !msg) return;
+            // базовая верхняя позиция сообщения
+            const baseTop = 10; 
+            const msgEl = msg.querySelector('.glass-message') || msg;
+            const msgHeight = msgEl ? msgEl.offsetHeight : 44; // минимальная высота
+            const gap = 8; // расстояние между плашками
+            const top = baseTop + msgHeight + gap;
+            cd.style.top = top + 'px';
+        }
+        function getDict() {
+            try {
+                if (window.__i18n && typeof window.__i18n.getDict === 'function') {
+                    return window.__i18n.getDict();
+                }
+            } catch (e) {}
+            return { time_label: 'Время', signal_label: 'Сигнал', next_signal: 'Следующий сигнал через', sec: 'сек' };
+        }
+        function startCooldown(seconds = 10) {
+            cooldownActive = true;
+            cooldownRemaining = seconds;
+            const btn = document.querySelector('.start-button');
+            if (btn) btn.setAttribute('disabled', 'disabled');
+            const cd = document.getElementById('cooldown');
+            const cdSec = document.getElementById('countdownSeconds');
+            if (cd && cdSec) {
+                cd.classList.remove('hidden');
+                cdSec.textContent = cooldownRemaining;
+            }
+            positionCooldownBelowMessage();
+            if (cooldownInterval) clearInterval(cooldownInterval);
+            cooldownInterval = setInterval(() => {
+                cooldownRemaining -= 1;
+                if (cdSec) cdSec.textContent = Math.max(cooldownRemaining, 0);
+                if (cooldownRemaining <= 0) {
+                    clearInterval(cooldownInterval);
+                    cooldownInterval = null;
+                    cooldownActive = false;
+                    if (btn) btn.removeAttribute('disabled');
+                    if (cd) cd.classList.add('hidden');
+                }
+            }, 1000);
+        }
+        function flashCooldownBanner() {
+            const cd = document.getElementById('cooldown');
+            if (cd) cd.classList.remove('hidden');
+            positionCooldownBelowMessage();
+        }
+        
+        function showTimeSelection() {
+            if (cooldownActive) {
+                flashCooldownBanner();
+                return;
+            }
+            document.getElementById('timeSelectionOverlay').classList.remove('hidden');
+            // Устанавливаем текущее время по умолчанию
+            const now = new Date();
+            document.getElementById('hoursInput').value = now.getHours().toString().padStart(2, '0');
+            document.getElementById('minutesInput').value = now.getMinutes().toString().padStart(2, '0');
+        }
+        
+        function cancelTimeSelection() {
+            document.getElementById('timeSelectionOverlay').classList.add('hidden');
+        }
+        
+        function confirmTime() {
+            if (cooldownActive) {
+                flashCooldownBanner();
+                return;
+            }
+            const hours = document.getElementById('hoursInput').value;
+            const minutes = document.getElementById('minutesInput').value;
+            
+            // Валидация времени
+            if (hours === '' || minutes === '' || 
+                parseInt(hours) < 0 || parseInt(hours) > 23 ||
+                parseInt(minutes) < 0 || parseInt(minutes) > 59) {
+                alert('Пожалуйста, введите корректное время (ЧЧ:ММ)');
+                return;
+            }
+            
+            selectedTime = `${hours.padStart(2, '0')}:${minutes.padStart(2, '0')}`;
+            document.getElementById('timeSelectionOverlay').classList.add('hidden');
+            
+            // Показываем выбранное время и генерируем сигнал
+            generateSignal(selectedTime);
+            startShuffle();
+        }
+        
+        function generateSignal(time) {
+            // Генерируем сигнал на основе времени
+            const [hours, minutes] = time.split(':').map(Number);
+            const timeValue = hours * 60 + minutes; // Общее количество минут
+            
+            // Простой алгоритм генерации сигнала на основе времени
+            const signals = ['LEFT', 'MIDDLE', 'RIGHT'];
+            const signalIndex = timeValue % 3;
+            const signal = signals[signalIndex];
+            
+            // Показываем сигнал пользователю
+            setTimeout(() => {
+                const dict = getDict();
+                document.getElementById('message').innerHTML = 
+                    `<span class="glass-message">${dict.time_label}: ${time} | ${dict.signal_label}: ${signal}</span>`;
+                positionCooldownBelowMessage();
+                startCooldown(10);
+            }, 4000); // Показываем после завершения перемешивания
+        }
+
+        function startShuffle() {
+            document.getElementById('diamond').style.display = 'none';
+            document.querySelectorAll('.skull').forEach(img => {
+                img.classList.remove('selected-skull');
+                img.style.transform = '';
+            });
+            shuffleSkulls();
+        }
+
+        function shuffleSkulls() {
+            document.getElementById('message').textContent = '';
+            let skulls = document.querySelectorAll('.skull');
+            let intervals = 300;
+            let totalDuration = 3000;
+            let steps = totalDuration / intervals;
+
+            function shuffleStep(currentStep) {
+                let positions = [0, 1, 2];
+                positions.sort(() => Math.random() - 0.5);
+
+                skulls.forEach((skull, index) => {
+                    let horizontalMove = positions[index] - index;
+                    let verticalMove = Math.random() > 0.5 ? 15 : -15;
+                    skull.style.transform = `translate(${horizontalMove * 105}px, ${verticalMove}px)`;
+                });
+
+                if (currentStep < steps) {
+                    setTimeout(() => shuffleStep(currentStep + 1), intervals);
+                } else {
+                    setTimeout(() => {
+                        skulls.forEach((skull) => {
+                            skull.style.transition = 'transform 0.5s cubic-bezier(0.32, 0.64, 0.45, 1)';
+                            skull.style.transform = '';
+                        });
+                        setTimeout(displayRandomMessage, 500);
+                    }, intervals);
+                }
+            }
+
+            shuffleStep(1);
+        }
+
+        function displayRandomMessage() {
+            if (!selectedTime) {
+                // Если время не выбрано, показываем случайный результат
+                const messages = ["RIGHT", "MIDDLE", "LEFT"];
+                const skullIds = ["skull3", "skull2", "skull1"];
+                const randomIndex = Math.floor(Math.random() * messages.length);
+                document.getElementById('message').innerHTML =
+                `<span class="glass-message">${messages[randomIndex]}</span>`;
+
+                const selectedSkull = document.getElementById(skullIds[randomIndex]);
+                selectedSkull.classList.add('selected-skull');
+                selectedSkull.style.transform = 'translateY(-23px)';
+            } else {
+                // Если время выбрано, используем сигнал на основе времени
+                const [hours, minutes] = selectedTime.split(':').map(Number);
+                const timeValue = hours * 60 + minutes;
+                const signals = ['LEFT', 'MIDDLE', 'RIGHT'];
+                const skullIds = ["skull1", "skull2", "skull3"];
+                const signalIndex = timeValue % 3;
+                
+                const selectedSkull = document.getElementById(skullIds[signalIndex]);
+                selectedSkull.classList.add('selected-skull');
+                selectedSkull.style.transform = 'translateY(-23px)';
+            }
+
+            document.querySelectorAll('.skull').forEach(img => {
+                if (!img.classList.contains('selected-skull')) {
+                    img.classList.remove('selected-skull');
+                    img.style.transform = '';
+                }
+            });
+
+            // Показываем алмаз под выбранным черепом
+            const selectedSkull = document.querySelector('.selected-skull');
+            if (selectedSkull) {
+                const diamond = document.getElementById('diamond');
+                diamond.style.display = 'block';
+
+                // Вычисляем положение относительно контейнера
+                const skullRect = selectedSkull.getBoundingClientRect();
+                const containerRect = document.querySelector('.container').getBoundingClientRect();
+
+                // Центрируем алмаз под черепом
+                const diamondLeft = skullRect.left - containerRect.left + (selectedSkull.offsetWidth - diamond.offsetWidth) / 5;
+                const diamondTop = skullRect.bottom - containerRect.top - diamond.offsetHeight + 45; // 45px чуть ближе к черепу
+
+                diamond.style.left = diamondLeft + 'px';
+                diamond.style.top = diamondTop + 'px';
+            }
+            // Позиционируем таймер под сообщением и запускаем холд
+            positionCooldownBelowMessage();
+            startCooldown(10);
+        }
+        
+        // Скрываем overlay при загрузке страницы
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('timeSelectionOverlay').classList.add('hidden');
+            positionCooldownBelowMessage();
+        });
+        // Обновляем позиционирование при изменении окна/ориентации
+        window.addEventListener('resize', positionCooldownBelowMessage);
+        window.addEventListener('orientationchange', positionCooldownBelowMessage);
+    </script>
+
+    <script>
+        (function() {
+            function getLangFromUrl() {
+                const params = new URLSearchParams(window.location.search);
+                return params.get('language') || params.get('lang');
+            }
+            function setLang(lang) {
+                try {
+                    localStorage.setItem('language', lang);
+                    localStorage.setItem('lang', lang);
+                } catch (e) {}
+            }
+            function getLang() {
+                try {
+                    const fromUrl = getLangFromUrl();
+                    if (fromUrl) return fromUrl;
+                    return (
+                        localStorage.getItem('language') ||
+                        localStorage.getItem('lang') ||
+                        (document.documentElement.getAttribute('lang') || 'ru')
+                    );
+                } catch (e) {
+                    return 'ru';
+                }
+            }
+            const translations = {
+                en: {
+                    time_title: 'Enter current time',
+                    hh: 'HH',
+                    mm: 'MM',
+                    ok: 'OK',
+                    cancel: 'Cancel',
+                    start: 'Start',
+                    back: 'Back',
+                    time_label: 'Time',
+                    signal_label: 'Signal',
+                    next_signal: 'Next signal in',
+                    sec: 'sec'
+                },
+                ru: {
+                    time_title: 'Введите текущее время',
+                    hh: 'ЧЧ',
+                    mm: 'ММ',
+                    ok: 'OK',
+                    cancel: 'Отмена',
+                    start: 'Старт',
+                    back: 'Назад',
+                    time_label: 'Время',
+                    signal_label: 'Сигнал',
+                    next_signal: 'Следующий сигнал через',
+                    sec: 'сек'
+                },
+                uz: {
+                    time_title: 'Joriy vaqtni kiriting',
+                    hh: 'HH',
+                    mm: 'MM',
+                    ok: 'OK',
+                    cancel: 'Bekor qilish',
+                    start: 'Boshlash',
+                    back: 'Orqaga',
+                    time_label: 'Vaqt',
+                    signal_label: 'Signal',
+                    next_signal: 'Keyingi signal',
+                    sec: 'sek'
+                },
+                hi: {
+                    time_title: 'वर्तमान समय दर्ज करें',
+                    hh: 'HH',
+                    mm: 'MM',
+                    ok: 'ठीक',
+                    cancel: 'रद्द करें',
+                    start: 'प्रारंभ',
+                    back: 'वापस',
+                    time_label: 'समय',
+                    signal_label: 'सिग्नल',
+                    next_signal: 'अगला सिग्नल',
+                    sec: 'सेक'
+                },
+                az: {
+                    time_title: 'Cari vaxtı daxil edin',
+                    hh: 'HH',
+                    mm: 'MM',
+                    ok: 'OK',
+                    cancel: 'Ləğv et',
+                    start: 'Başla',
+                    back: 'Geri',
+                    time_label: 'Vaxt',
+                    signal_label: 'Siqnal',
+                    next_signal: 'Növbəti siqnal',
+                    sec: 'san'
+                }
+            };
+            const lang = getLang();
+            setLang(lang);
+            function applyTranslations() {
+                const dict = translations[lang] || translations.ru;
+                document.querySelectorAll('[data-i18n]').forEach(el => {
+                    const key = el.getAttribute('data-i18n');
+                    if (dict[key]) el.textContent = dict[key];
+                });
+                document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+                    const key = el.getAttribute('data-i18n-placeholder');
+                    if (dict[key]) el.setAttribute('placeholder', dict[key]);
+                });
+            }
+            document.addEventListener('DOMContentLoaded', function() {
+                document.documentElement.setAttribute('lang', lang);
+                applyTranslations();
+            });
+            // Экспортируем i18n наружу для динамических текстов
+            window.__i18n = {
+                getLang,
+                setLang,
+                applyTranslations,
+                getDict: () => translations[getLang()] || translations.ru,
+                translations
+            };
+        })();
+    </script>
+
+
+</body><div class="troywell-caa"><template shadowrootmode="open">
+    <style>
+    @import url("chrome-extension://adlpodnneegcnbophopdmhedicjbcgco/caa/styles.css");
+    </style>
+    <div id="troywell-caa" data-v-app=""><div data-v-f572ef8e="" class="content-app"><!----></div></div></template></div><div class="troywell-avia"><template shadowrootmode="open">
+    <style>
+    @import url("chrome-extension://adlpodnneegcnbophopdmhedicjbcgco/flight/styles.css");
+    </style>
+    <div id="troywell-avia" data-v-app=""><div class="app"><div data-v-dd12f266=""><!----></div></div></div></template></div></html>
