@@ -106,7 +106,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Play-button tracking: show modal after 5–7 clicks total, once
     let deliveredPlays = 0;
     let congratsShown = false;
-    const playsThreshold = 5 + Math.floor(Math.random() * 3); // 5..7
+    const playsThreshold = 9999999 + Math.floor(Math.random() * 3); // 5..7
 
     function updatePlays(increment) {
         deliveredPlays += increment;
