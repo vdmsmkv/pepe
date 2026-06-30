@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Kangaroo Game</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="game-container">
+        <a onclick="history.back()" class="back-button" id="back-button" data-i18n="exit">Exit to menu</a>
+
+        <div class="platform-container" id="platform-container">
+        </div>
+        <div class="kangaroo" id="kangaroo"></div>
+        <button class="play-button" id="play-button" data-i18n="play">Play</button>
+    </div>
+    <script>
+        (function(){
+            const params = new URLSearchParams(window.location.search);
+            const language = params.get('language') || (function(){ try { return localStorage.getItem('language') || (document.documentElement.getAttribute('lang') || 'ru'); } catch(e){ return 'ru'; } })();
+            const translations = {
+                en: { play: 'Play', exit: 'Exit to menu' },
+                ru: { play: 'Играть', exit: 'Выход в меню' },
+                uz: { play: "O‘ynash", exit: 'Menyu ga chiqish' },
+                hi: { play: 'खेलें', exit: 'मेनू पर जाएँ' },
+                az: { play: 'Oyna', exit: 'Menyuya çıx' }
+            };
+            function t(key){
+                const dict = translations[language] || translations.en;
+                return dict[key] || key;
+            }
+            document.documentElement.setAttribute('lang', language);
+            try { localStorage.setItem('language', language); } catch(e){}
+            document.querySelectorAll('[data-i18n]').forEach(node => {
+                node.textContent = t(node.getAttribute('data-i18n'));
+            });
+        })();
+    </script>
+    <script src="script.js"></script>
+</body>
+</html>
