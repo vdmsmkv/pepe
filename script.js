@@ -939,9 +939,9 @@ function openGame(game) {
             ios: 'penalty/index.html',
             other: 'penalty/index.html'
         },
-        bomBucks: {
-            ios: 'bombucks/index.html',
-            other: 'bombucks/index.html'
+        minefield: {
+            ios: 'minefield/index.html',
+            other: 'minefield/index.html'
         },
         lucky: {
             ios: 'jet/index.html',
